@@ -1,29 +1,39 @@
-import { createElement } from "react";
-import {
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-} from "@ant-design/icons";
-import { Layout, Menu, theme } from "antd";
+import { Layout, Menu, MenuProps } from "antd";
+import { Link, Outlet } from "react-router-dom";
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Content, Footer, Sider,Header } = Layout;
 
-const items = [
-  UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
-  UserOutlined,
-].map((icon, index) => ({
-  key: String(index + 1),
-  icon: createElement(icon),
-  label: `nav ${index + 1}`,
-}));
+const items: MenuProps["items"] = [
+  {
+    key: 1,
+    label: "Dashboard",
+  },
+  {
+    key: 2,
+    label: "Profile",
+  },
+  {
+    key: 3,
+    label: "User Management",
+    children: [
+      {
+        key: 11,
+        label: "Admin",
+      },
+      {
+        key: 12,
+        label: "Faculty",
+      },
+      {
+        key: 13,
+        label: "Student",
+      },
+    ],
+  },
+];
 const MainLayout = () => {
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
   return (
-    <Layout>
+    <Layout style={{ height: "100vh" }}>
       <Sider
         breakpoint="lg"
         collapsedWidth="0"
@@ -34,6 +44,19 @@ const MainLayout = () => {
           console.log(collapsed, type);
         }}
       >
+        <Link
+          to={"/"}
+          style={{
+            color: "white",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "4px",
+            fontSize:"24px",
+          }}
+        >
+          PH University
+        </Link>
         <div className="demo-logo-vertical" />
         <Menu
           theme="dark"
@@ -43,18 +66,9 @@ const MainLayout = () => {
         />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }} />
-        <Content style={{ margin: "24px 16px 0" }}>
-          <div
-            style={{
-              padding: 24,
-              minHeight: 360,
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG,
-            }}
-          >
-            The main content should here
-          </div>
+        <Header style={{ padding: 0 ,backgroundColor:"yellowgreen"}} />
+        <Content style={{border:"2px solid red"}}>
+          <Outlet/>
         </Content>
         <Footer style={{ textAlign: "center" }}>
           Ant Design ©{new Date().getFullYear()} Created by Ant UED

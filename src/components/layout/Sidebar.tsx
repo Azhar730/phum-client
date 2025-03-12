@@ -3,19 +3,37 @@ import Sider from "antd/es/layout/Sider";
 import { Link } from "react-router-dom";
 import { sidebarItemsGenerator } from "../../utils/sidebarItemsGenerator";
 import { adminPaths } from "../../routes/admin.routes";
+import { facultyPaths } from "../../routes/faculty.routes";
+import { studentPaths } from "../../routes/student.routes";
+import { useAppSelector } from "../../redux/hooks";
+import { selectCurrentUser } from "../../redux/features/auth/authSlice";
+
+const userRole = {
+  Admin: "admin",
+  Faculty: "faculty",
+  Student: "student",
+};
 
 const Sidebar = () => {
+  const user = useAppSelector(selectCurrentUser);
+  const role = user?.role;
+  let sidebarItems;
+  switch (role) {
+    case userRole.Admin:
+      sidebarItems = sidebarItemsGenerator(adminPaths, userRole.Admin);
+      break;
+    case userRole.Faculty:
+      sidebarItems = sidebarItemsGenerator(facultyPaths, userRole.Faculty);
+      break;
+    case userRole.Student:
+      sidebarItems = sidebarItemsGenerator(studentPaths, userRole.Student);
+      break;
+
+    default:
+      break;
+  }
   return (
-    <Sider
-      breakpoint="lg"
-      collapsedWidth="0"
-      onBreakpoint={(broken) => {
-        console.log(broken);
-      }}
-      onCollapse={(collapsed, type) => {
-        console.log(collapsed, type);
-      }}
-    >
+    <Sider breakpoint="lg" collapsedWidth="0">
       <Link
         to={"/"}
         style={{
@@ -34,7 +52,7 @@ const Sidebar = () => {
         theme="dark"
         mode="inline"
         defaultSelectedKeys={["4"]}
-        items={sidebarItemsGenerator(adminPaths, "admin")}
+        items={sidebarItems}
       />
     </Sider>
   );
